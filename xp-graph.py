@@ -1,16 +1,16 @@
-
 import networkx as nx
 import matplotlib.pyplot as plt
 import pandas as pd
 
 # Define the data for the xApps and their ICPs
 xapp_data = {
-    'Name': ['MLB', 'CCO', 'ES', 'MRO'],
+    'Name': ['$x_1$', '$x_2$', '$x_3$', '$x_4$', '$x_5$'],
     'ICPs': [
-        ['TTT', 'CIO', 'TXP', 'RET'],
-        ['TXP', 'RET'],
-        ['TXP'],
-        ['TXP', 'TTT', 'CIO', 'NL', 'HYS']
+        ['$p_1$', '$p_2$'],
+        ['$p_1$', '$p_2$', '$p_3$'],
+        ['$p_1$', '$p_4$'],
+        ['$p_5$', '$p_6$'],
+        ['$p_7$', '$p_8$']
     ]
 }
 
@@ -39,15 +39,21 @@ for i, xapp1 in xapp_df.iterrows():
                 G_with_icps.add_edge(xapp1['Name'], xapp2['Name'])
                 edge_labels[(xapp1['Name'], xapp2['Name'])] = ', '.join(common_icps)
 
+# Remove nodes with no edges
+nodes_with_edges = list(G_with_icps.edges())
+nodes_to_remove = [node for node in G_with_icps.nodes() if G_with_icps.degree(node) == 0]
+G_with_icps.remove_nodes_from(nodes_to_remove)
+
 # Draw the graph
 plt.figure(figsize=(12, 9))
-pos = nx.spring_layout(G_with_icps)  # Positions for all nodes
+pos = nx.spring_layout(G_with_icps, k=0.5, seed=42)  # Adjust k for edge length
 nx.draw(G_with_icps, pos, with_labels=True, node_size=3500, node_color='skyblue', font_size=20, font_weight='bold')
 
 # Draw edge labels
 nx.draw_networkx_edge_labels(G_with_icps, pos, edge_labels=edge_labels, font_color='red')
 
-plt.title('Conflict Graph with ICPs for xApps in Open-RAN Network')
-plt.show()
+plt.title('Conflict Graph with ICPs for xApps in Open-RAN Network', fontsize=15)
 
-plt.savefig('X-P graph.png')
+# Save the figure
+plt.savefig('X-P_graph.pdf', format='pdf')
+plt.show()
