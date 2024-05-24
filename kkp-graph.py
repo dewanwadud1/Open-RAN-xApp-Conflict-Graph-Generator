@@ -77,5 +77,5 @@ for kpi, params in kpi_to_params.items():
 plt.title('K-P Graph with KPIs for Parameters in Open-RAN Network', fontsize=15)
 
 # Save the figure
-plt.savefig('K-P_graph.png', format='png')
+plt.savefig('K-P_graph.pdf', format='pdf')
 plt.show()
